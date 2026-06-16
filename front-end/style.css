@@ -1,0 +1,659 @@
+/* 
+ * style.css - Folha de estilos para o Controle de Estoque (ERP Industrial / Estilo Bancário)
+ * 
+ * Focado em: Fundo claro, tons de cinza, azul e branco, poucas cores,
+ * bordas suaves, tabelas densas com muito espaço para dados e poucos efeitos.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* --- VARIÁVEIS DO SISTEMA DE DESIGN --- */
+:root {
+  /* Tipografia */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Cores Base */
+  --bg-app: #f4f6f9;            /* Cinza bem claro para o fundo geral */
+  --bg-card: #ffffff;           /* Branco puro para cards, tabelas e modais */
+  --text-primary: #1e293b;      /* Cinza escuro/quase preto para textos principais */
+  --text-secondary: #64748b;    /* Cinza médio para rótulos e descrições */
+  --text-light: #94a3b8;        /* Cinza claro para elementos desativados ou secundários */
+  
+  /* Azul Corporativo/Bancário */
+  --color-primary: #0056b3;     /* Azul principal (ações, links primários) */
+  --color-primary-hover: #004085;
+  --color-primary-light: #e6f0fa; /* Fundo azul claro para destaques sutis */
+  
+  /* Bordas */
+  --border-color: #e2e8f0;      /* Cinza suave para divisórias e contornos */
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;      /* Bordas suaves padrão banco */
+  --border-radius-lg: 8px;
+  
+  /* Cores de Alerta/Status */
+  --color-danger: #cf222e;      /* Vermelho industrial limpo */
+  --color-danger-bg: #ffebe9;
+  --color-success: #1a7f37;     /* Verde de confirmação */
+  --color-success-bg: #dafbe1;
+  --color-warning: #9a6700;     /* Amarelo/laranja para avisos */
+  --color-warning-bg: #fff8c5;
+}
+
+/* --- RESET & CONFIGURAÇÕES GERAIS --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* --- ESTRUTURA DO LAYOUT --- */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header Estilo Banco */
+.app-header {
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 24px;
+  height: 24px;
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.logo-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+
+.logo-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  border-left: 1px solid var(--border-color);
+  padding-left: 12px;
+  margin-left: 4px;
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.meta-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-success);
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+}
+
+.meta-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Conteúdo Principal */
+.app-content {
+  flex: 1;
+  padding: 24px;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* --- INDICADORES (KPIs) - ESTILO LIMPO --- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.kpi-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpi-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kpi-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.kpi-footer {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+/* Cores discretas para KPIs específicos */
+.kpi-card.warning {
+  border-left: 4px solid var(--color-warning);
+}
+.kpi-card.warning .kpi-value {
+  color: var(--color-warning);
+}
+
+/* --- PAINEL PRINCIPAL (GRID ERP) --- */
+.panel {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Barra de Ferramentas / Filtros */
+.toolbar {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filters-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Inputs e Seletores do Painel */
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-input {
+  width: 280px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: #fafbfc;
+  transition: all 0.15s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.15);
+}
+
+.select-filter {
+  height: 36px;
+  padding: 0 28px 0 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: #fafbfc;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+}
+
+.select-filter:focus {
+  border-color: var(--color-primary);
+}
+
+.checkbox-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text-secondary);
+}
+
+.checkbox-filter input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  gap: 6px;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.btn-danger-outline {
+  background-color: #ffffff;
+  border-color: #fee2e2;
+  color: var(--color-danger);
+}
+
+.btn-danger-outline:hover {
+  background-color: var(--color-danger-bg);
+  border-color: #fca5a5;
+}
+
+.btn-sm {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+  border-radius: var(--border-radius-sm);
+}
+
+/* --- TABELAS GRANDES E DENSAS (ERP) --- */
+.table-container {
+  overflow-x: auto;
+  max-height: 550px; /* Rolagem vertical para tabelas muito grandes */
+  position: relative;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap; /* Evita quebra de linha feia em relatórios */
+}
+
+/* Cabeçalho Fixo */
+.data-table th {
+  position: sticky;
+  top: 0;
+  background-color: #f8fafc;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  z-index: 1;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 13.5px;
+}
+
+/* Efeito Zebrado Discreto */
+.data-table tbody tr:nth-child(even) {
+  background-color: #fafbfc;
+}
+
+/* Destaque sutil ao passar o mouse */
+.data-table tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+/* Badges e Status */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.badge-success {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.badge-danger {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.badge-neutral {
+  background-color: #f1f5f9;
+  color: var(--text-secondary);
+}
+
+/* Ações em Lote na Tabela */
+.action-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.price-col, .qty-col {
+  text-align: right;
+  font-variant-numeric: tabular-nums; /* Números alinhados */
+}
+
+.code-col {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Indicador de carregamento ou tabela vazia */
+.table-empty {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.table-empty p {
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+/* --- MODAIS DE BANCO --- */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.4); /* Backdrop escuro sutil */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  width: 500px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Sombra suave bancária */
+  transform: translateY(-20px);
+  transition: transform 0.15s ease;
+}
+
+.modal-backdrop.active .modal {
+  transform: translateY(0);
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-color);
+  background-color: #fafbfc;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-bottom-left-radius: var(--border-radius-lg);
+  border-bottom-right-radius: var(--border-radius-lg);
+}
+
+/* --- FORMULÁRIOS INTERNOS --- */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.form-control {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.form-control:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.15);
+}
+
+textarea.form-control {
+  height: 80px;
+  padding: 10px 12px;
+  resize: none;
+}
+
+/* --- PÁGINAS ALTERNATIVAS (HISTÓRICO) --- */
+.tabs-container {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 20px;
+  background-color: var(--bg-card);
+}
+
+.tab-btn {
+  padding: 14px 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  border-bottom-color: var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Rodapé */
+.app-footer {
+  text-align: center;
+  padding: 16px;
+  color: var(--text-light);
+  font-size: 11px;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  margin-top: auto;
+}
+
+/* --- TOAST NOTIFICATIONS (MENSAGENS) --- */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 200;
+}
+
+.toast {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: var(--border-radius-md);
+  padding: 12px 16px;
+  min-width: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 500;
+  animation: slideIn 0.2s ease-out forwards;
+}
+
+.toast.success {
+  border-left: 4px solid var(--color-success);
+}
+
+.toast.error {
+  border-left: 4px solid var(--color-danger);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

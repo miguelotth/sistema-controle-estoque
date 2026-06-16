@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGE | Sistema de Controle de Estoque</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Cabeçalho Principal (Estilo Bancário) -->
+    <header class="app-header">
+      <div class="logo-container">
+        <div class="logo-icon">E</div>
+        <div>
+          <span class="logo-title">SGE</span>
+          <span class="logo-subtitle">Controle de Estoque Industrial</span>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-status">
+          <span class="status-indicator"></span>
+          <span>Banco de Dados Local</span>
+        </div>
+        <div class="meta-date" id="current-date">--/--/----</div>
+      </div>
+    </header>
+
+    <!-- Abas de Navegação -->
+    <nav class="tabs-container">
+      <button class="tab-btn active" id="tab-estoque-btn">Painel de Estoque</button>
+      <button class="tab-btn" id="tab-movimentacoes-btn">Histórico de Movimentações</button>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="app-content">
+
+      <!-- ================= ABA 1: PAINEL DE ESTOQUE ================= -->
+      <section id="tab-estoque" class="tab-content active">
+        <!-- Indicadores (KPIs) -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">Itens Cadastrados</span>
+            <span class="kpi-value" id="kpi-total-skus">0</span>
+            <span class="kpi-footer">SKUs exclusivos no catálogo</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Total em Estoque</span>
+            <span class="kpi-value" id="kpi-total-items">0</span>
+            <span class="kpi-footer">Unidades físicas armazenadas</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Valor do Patrimônio</span>
+            <span class="kpi-value" id="kpi-total-value">R$ 0,00</span>
+            <span class="kpi-footer">Custo total do inventário</span>
+          </div>
+          <div class="kpi-card warning" id="kpi-card-low-stock">
+            <span class="kpi-label">Abaixo do Limite Mínimo</span>
+            <span class="kpi-value" id="kpi-low-stock-count">0</span>
+            <span class="kpi-footer">Necessitam reposição imediata</span>
+          </div>
+        </div>
+
+        <div style="height: 20px;"></div>
+
+        <!-- Painel Central com Tabela ERP -->
+        <div class="panel">
+          <!-- Barra de Ferramentas / Filtros -->
+          <div class="toolbar">
+            <div class="filters-group">
+              <div class="search-input-wrapper">
+                <input type="text" id="search-filter" class="search-input" placeholder="Pesquisar por SKU ou Nome...">
+              </div>
+              <select id="category-filter" class="select-filter">
+                <option value="">Todas as Categorias</option>
+              </select>
+              <label class="checkbox-filter">
+                <input type="checkbox" id="low-stock-filter">
+                <span>Apenas estoque baixo</span>
+              </label>
+            </div>
+            <div>
+              <button class="btn btn-primary" id="btn-open-add-modal">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 2px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Cadastrar Produto
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabela Grande de Dados -->
+          <div class="table-container">
+            <table class="data-table" id="products-table">
+              <thead>
+                <tr>
+                  <th style="width: 120px;">Código / SKU</th>
+                  <th>Nome do Produto</th>
+                  <th>Categoria</th>
+                  <th class="price-col" style="width: 140px;">Preço Unitário</th>
+                  <th class="qty-col" style="width: 120px;">Qtd. Atual</th>
+                  <th class="qty-col" style="width: 120px;">Qtd. Mínima</th>
+                  <th style="width: 130px; text-align: center;">Status</th>
+                  <th style="width: 200px; text-align: center;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="products-table-body">
+                <!-- Preenchido via JavaScript -->
+              </tbody>
+            </table>
+            <div id="no-products-msg" class="table-empty" style="display: none;">
+              <p>Nenhum produto cadastrado ou correspondente aos filtros.</p>
+              <button class="btn btn-secondary btn-sm" id="btn-reset-filters">Limpar Filtros</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ABA 2: HISTÓRICO DE MOVIMENTAÇÕES ================= -->
+      <section id="tab-movimentacoes" class="tab-content">
+        <div class="panel">
+          <div class="toolbar">
+            <h3 style="font-size: 15px; font-weight: 600;">Registro Geral de Entrada e Saída</h3>
+            <span class="meta-date" id="movement-count">0 movimentações registradas</span>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table" id="movements-table">
+              <thead>
+                <tr>
+                  <th style="width: 160px;">Data / Hora</th>
+                  <th style="width: 120px;">Código / SKU</th>
+                  <th>Nome do Produto</th>
+                  <th style="width: 100px; text-align: center;">Operação</th>
+                  <th class="qty-col" style="width: 100px;">Quantidade</th>
+                  <th>Motivo / Descrição da OS</th>
+                </tr>
+              </thead>
+              <tbody id="movements-table-body">
+                <!-- Preenchido via JavaScript -->
+              </tbody>
+            </table>
+            <div id="no-movements-msg" class="table-empty" style="display: none;">
+              <p>Nenhuma movimentação de estoque registrada até o momento.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Rodapé Limpo -->
+    <footer class="app-footer">
+      SGE v1.0.0 &copy; 2026 - Controle de Estoque Corporativo. Licença de Aprendizado.
+    </footer>
+  </div>
+
+  <!-- ================= MODAIS (ESTILO DIÁLOGO BANCÁRIO) ================= -->
+
+  <!-- Modal 1: Cadastro / Edição de Produto -->
+  <div class="modal-backdrop" id="modal-product-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="product-modal-title">Cadastrar Novo Produto</h3>
+        <button class="modal-close" onclick="closeModal('modal-product-backdrop')">&times;</button>
+      </div>
+      <form id="product-form">
+        <input type="hidden" id="product-id"> <!-- Vazio para novos cadastros -->
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="product-sku" class="form-label">Código / SKU</label>
+              <input type="text" id="product-sku" class="form-control" placeholder="Ex: MP-AC-100 (Opcional)">
+            </div>
+            <div class="form-group">
+              <label for="product-category" class="form-label">Categoria</label>
+              <input type="text" id="product-category" class="form-control" placeholder="Ex: Matéria-Prima" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="product-name" class="form-label">Nome do Produto</label>
+            <input type="text" id="product-name" class="form-control" placeholder="Ex: Chapa de Aço Carbono" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="product-price" class="form-label">Preço Unitário (R$)</label>
+              <input type="number" id="product-price" class="form-control" step="0.01" min="0" placeholder="0,00" required>
+            </div>
+            <div class="form-group">
+              <label for="product-min-quantity" class="form-label">Estoque Mínimo (Alerta)</label>
+              <input type="number" id="product-min-quantity" class="form-control" min="0" placeholder="0" required>
+            </div>
+          </div>
+
+          <div class="form-group" id="initial-qty-container">
+            <label for="product-quantity" class="form-label">Quantidade Inicial em Estoque</label>
+            <input type="number" id="product-quantity" class="form-control" min="0" placeholder="0">
+          </div>
+
+          <div class="form-group">
+            <label for="product-description" class="form-label">Descrição Adicional</label>
+            <textarea id="product-description" class="form-control" placeholder="Detalhes técnicos, fabricante, localização..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-product-backdrop')">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-product">Confirmar e Gravar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Registrar Movimentação (Entrada/Saída rápida) -->
+  <div class="modal-backdrop" id="modal-movement-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Movimentação de Estoque</h3>
+        <button class="modal-close" onclick="closeModal('modal-movement-backdrop')">&times;</button>
+      </div>
+      <form id="movement-form">
+        <input type="hidden" id="movement-product-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Produto Selecionado</label>
+            <input type="text" id="movement-product-name" class="form-control" readonly style="background-color: #f1f5f9; cursor: not-allowed; font-weight: 500;">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="movement-type" class="form-label">Tipo de Lançamento</label>
+              <select id="movement-type" class="form-control" style="padding: 0 10px;" required>
+                <option value="entrada">Entrada (+ Acréscimo)</option>
+                <option value="saida">Saída (- Baixa/Consumo)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="movement-qty" class="form-label">Quantidade</label>
+              <input type="number" id="movement-qty" class="form-control" min="1" placeholder="Mínimo 1" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="movement-reason" class="form-label">Justificativa / Documento de Origem</label>
+            <input type="text" id="movement-reason" class="form-control" placeholder="Ex: NF-e 4432, Ordem de Serviço #109, Ajuste de Inventário" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-movement-backdrop')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Lançar Registro</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Confirmação de Exclusão -->
+  <div class="modal-backdrop" id="modal-delete-backdrop">
+    <div class="modal" style="width: 400px;">
+      <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+        <h3 class="modal-title" style="color: var(--color-danger);">Aviso de Exclusão</h3>
+        <button class="modal-close" onclick="closeModal('modal-delete-backdrop')">&times;</button>
+      </div>
+      <div class="modal-body" style="padding-top: 10px;">
+        <p>Você tem certeza que deseja remover este produto definitivamente do catálogo de estoque?</p>
+        <p style="font-weight: 600; margin-top: 8px;" id="delete-product-display-name">Nome do Produto</p>
+        <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Esta operação apagará todos os saldos e o histórico de movimentações vinculados.</p>
+      </div>
+      <div class="modal-footer" style="border-top: none; background-color: transparent;">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-delete-backdrop')">Voltar</button>
+        <button type="button" class="btn btn-danger-outline" id="btn-confirm-delete">Excluir Produto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conteiner para Notificações Flutuantes -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts da Aplicação -->
+  <script src="api.js"></script>
+  <script src="app.js"></script>
+  
+  <!-- Helpers Globais simples para fechar modal -->
+  <script>
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+  </script>
+</body>
+</html>
