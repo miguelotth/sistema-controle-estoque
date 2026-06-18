@@ -111,7 +111,6 @@ const showToast = (message, type = 'success') => {
   
   elements.toastContainer.appendChild(toast);
   
-  // Auto-remove após 4 segundos
   setTimeout(() => {
     if (toast.parentElement) {
       toast.remove();
@@ -119,19 +118,18 @@ const showToast = (message, type = 'success') => {
   }, 4000);
 };
 
-// --- FUNÇÃO PARA CARREGAR DADOS DA API MOCK ---
+// --- CARREGAR DADOS---
 const loadData = async () => {
   try {
     state.products = await api.getProducts();
     state.movements = await api.getMovements();
     
-    // Atualizar UI
     updateCategoryFilterDropdown();
     renderDashboard();
     renderProductsTable();
     renderMovementsTable();
   } catch (error) {
-    showToast('Falha ao sincronizar dados com o local storage.', 'error');
+    showToast('Falha ao sincronizar dados com o banco de dados.', 'error');
     console.error(error);
   }
 };
@@ -312,9 +310,12 @@ const handleTableActions = (e) => {
 
   const action = button.dataset.action;
   const id = button.dataset.id;
-  if (!action || !id) return;
 
-  const product = state.products.find(p => p.id === id);
+console.log("Botão clicado:", action, id);
+
+  const product = state.products.find(
+  p => String(p.id) === String(id)
+);
   if (!product) return;
 
   if (action === 'move') {

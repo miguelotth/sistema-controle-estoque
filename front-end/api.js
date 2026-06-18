@@ -140,7 +140,7 @@ window.api = {
   },
 
   // Criar novo produto
-  async createProduct(productData) {
+async createProduct(productData) {
 
   const response = await fetch(
     "http://localhost:3000/produtos",
@@ -153,136 +153,97 @@ window.api = {
         sku: productData.sku,
         nome: productData.name,
         categoria: productData.category,
-        preco: parseFloat(productData.price),
-        quantidade: parseInt(productData.quantity),
-        quantidade_minima: parseInt(productData.minQuantity),
+        preco: productData.price,
+        quantidade: productData.quantity,
+        quantidade_minima: productData.minQuantity,
         descricao: productData.description
       })
     }
   );
 
-  const result = await response.json();
+  const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(result.erro || "Erro ao cadastrar produto");
+    throw new Error(data.erro || "Erro ao cadastrar produto");
   }
 
-  return result;
+  return data;
 },
   // Atualizar produto existente
-  async updateProduct(id, updatedData) {
-    await delay();
-    const products = getStoredData(STORAGE_PRODUCTS_KEY, DEFAULT_PRODUCTS);
-    const index = products.findIndex(p => p.id === id);
+async updateProduct(id, updatedData) {
 
-    if (index === -1) {
-      throw new Error('Produto não localizado.');
+  const response = await fetch(
+    `http://localhost:3000/produtos/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        sku: updatedData.sku,
+        nome: updatedData.name,
+        categoria: updatedData.category,
+        preco: updatedData.price,
+        quantidade: updatedData.quantity,
+        quantidade_minima: updatedData.minQuantity,
+        descricao: updatedData.description
+      })
     }
+  );
 
-    const currentProduct = products[index];
+  const data = await response.json();
 
-    // Se o SKU mudou, validar unicidade
-    const newSku = updatedData.sku ? updatedData.sku.trim().toUpperCase() : currentProduct.sku;
-    if (newSku !== currentProduct.sku && products.some(p => p.sku === newSku && p.id !== id)) {
-      throw new Error(`Já existe outro produto cadastrado com o SKU/Código: ${newSku}`);
-    }
+  if (!response.ok) {
+    throw new Error(data.erro || "Erro ao atualizar produto");
+  }
 
-    // Guardar quantidade antiga para comparar se houve mudança direta
-    const oldQty = currentProduct.quantity;
-    const newQty = parseInt(updatedData.quantity) || 0;
-
-    const updatedProduct = {
-      ...currentProduct,
-      sku: newSku,
-      name: updatedData.name.trim(),
-      category: updatedData.category.trim() || 'Sem Categoria',
-      price: parseFloat(updatedData.price) || 0,
-      quantity: newQty,
-      minQuantity: parseInt(updatedData.minQuantity) || 0,
-      description: updatedData.description ? updatedData.description.trim() : ''
-    };
-
-    products[index] = updatedProduct;
-    setStoredData(STORAGE_PRODUCTS_KEY, products);
-
-    // Registra movimentação de ajuste se a quantidade foi modificada manualmente
-    if (newQty !== oldQty) {
-      const diff = newQty - oldQty;
-      await this.registerMovement({
-        productId: id,
-        productName: updatedProduct.name,
-        sku: updatedProduct.sku,
-        type: diff > 0 ? 'entrada' : 'saida',
-        quantity: Math.abs(diff),
-        reason: 'Ajuste Manual de Cadastro'
-      });
-    }
-
-    return updatedProduct;
-  },
+  return data;
+},
 
   // Deletar produto
   async deleteProduct(id) {
-    await delay();
-    const products = getStoredData(STORAGE_PRODUCTS_KEY, DEFAULT_PRODUCTS);
-    const productToDelete = products.find(p => p.id === id);
 
-    if (!productToDelete) {
-      throw new Error('Produto não localizado.');
+  const response = await fetch(
+    `http://localhost:3000/produtos/${id}`,
+    {
+      method: "DELETE"
     }
+  );
 
-    const filtered = products.filter(p => p.id !== id);
-    setStoredData(STORAGE_PRODUCTS_KEY, filtered);
+  const data = await response.json();
 
-    // Limpar histórico associado (opcional, mas bom manter para consistência)
-    const movements = getStoredData(STORAGE_MOVEMENTS_KEY, DEFAULT_MOVEMENTS);
-    const filteredMovements = movements.filter(m => m.productId !== id);
-    setStoredData(STORAGE_MOVEMENTS_KEY, filteredMovements);
+  if (!response.ok) {
+    throw new Error(data.erro || "Erro ao excluir produto");
+  }
 
-    return true;
-  },
+  return true;
+},
 
   // Registrar Entrada ou Saída de Estoque avulsa
-  async adjustStock(id, type, qty, reason) {
-    await delay();
-    if (qty <= 0) throw new Error('A quantidade deve ser maior que zero.');
-    if (type !== 'entrada' && type !== 'saida') throw new Error('Tipo de movimentação inválido.');
+async adjustStock(id, type, qty, reason) {
 
-    const products = getStoredData(STORAGE_PRODUCTS_KEY, DEFAULT_PRODUCTS);
-    const index = products.findIndex(p => p.id === id);
-
-    if (index === -1) {
-      throw new Error('Produto não localizado.');
+  const response = await fetch(
+    `http://localhost:3000/produtos/${id}/movimentar`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        tipo: type,
+        quantidade: qty
+      })
     }
+  );
 
-    const product = products[index];
+  const data = await response.json();
 
-    if (type === 'saida' && product.quantity < qty) {
-      throw new Error(`Estoque insuficiente. Saldo disponível: ${product.quantity} unidades.`);
-    }
+  if (!response.ok) {
+    throw new Error(data.erro);
+  }
 
-    // Atualiza quantidade
-    if (type === 'entrada') {
-      product.quantity += qty;
-    } else {
-      product.quantity -= qty;
-    }
-
-    products[index] = product;
-    setStoredData(STORAGE_PRODUCTS_KEY, products);
-
-    // Registrar movimentação
-    await this.registerMovement({
-      productId: id,
-      productName: product.name,
-      sku: product.sku,
-      type: type,
-      quantity: qty,
-      reason: reason || (type === 'entrada' ? 'Ajuste de Entrada' : 'Ajuste de Saída')
-    });
-
-    return product;
-  },
+  return data;
+},
 
   // Registrar Movimentação no Histórico
   async registerMovement({ productId, productName, sku, type, quantity, reason }) {
