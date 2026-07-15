@@ -407,6 +407,13 @@ const handleMovementSubmit = async (e) => {
     btnSubmit.disabled = true;
     btnSubmit.textContent = 'Registrando...';
 
+    console.log({
+     id,
+     type,
+     qty,
+     reason
+    });
+
     await api.adjustStock(id, type, qty, reason);
     
     showToast(`Movimentação de ${type === 'entrada' ? 'entrada' : 'saída'} lançada com sucesso!`);

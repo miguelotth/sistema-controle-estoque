@@ -7,6 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
 app.get("/produtos", (req, res) => {
 
     console.log("Consultando MySQL...");
@@ -27,6 +28,7 @@ app.get("/produtos", (req, res) => {
     );
 
 });
+
 
 app.post("/produtos", (req, res) => {
 
@@ -84,6 +86,7 @@ app.post("/produtos", (req, res) => {
 
 });
 
+
 app.delete("/produtos/:id", (req, res) => {
 
     const { id } = req.params;
@@ -109,47 +112,107 @@ app.delete("/produtos/:id", (req, res) => {
 
 });
 
-app.put("/produtos/:id/movimentar", (req, res) => {
+
+app.put("/produtos/:id", (req, res) => {
 
     const { id } = req.params;
-    const { tipo, quantidade } = req.body;
+
+    const {
+        sku,
+        nome,
+        categoria,
+        preco,
+        quantidade,
+        quantidade_minima,
+        descricao
+    } = req.body;
+
+    const sql = `
+        UPDATE produtos
+        SET
+            sku = ?,
+            nome = ?,
+            categoria = ?,
+            preco = ?,
+            quantidade = ?,
+            quantidade_minima = ?,
+            descricao = ?
+        WHERE id = ?
+    `;
 
     db.query(
-        "SELECT quantidade FROM produtos WHERE id = ?",
+        sql,
+        [
+            sku,
+            nome,
+            categoria,
+            preco,
+            quantidade,
+            quantidade_minima,
+            descricao,
+            id
+        ],
+        (err, result) => {
+
+            if (err) {
+                console.error(err);
+                return res.status(500).json({
+                    erro: "Erro ao atualizar produto"
+                });
+            }
+
+            res.json({
+                mensagem: "Produto atualizado com sucesso"
+            });
+
+        }
+    );
+});
+
+
+app.put("/produtos/:id/movimentar", (req, res) => {
+
+    console.log("=== PUT MOVIMENTAR ===");
+    console.log(req.params);
+    console.log(req.body);
+
+    const { id } = req.params;
+    const { tipo, quantidade, motivo } = req.body;
+    const qtd = Number(quantidade);
+
+    db.query(
+        "SELECT * FROM produtos WHERE id = ?",
         [id],
         (err, results) => {
 
             if (err) {
                 console.error(err);
-                return res.status(500).json({
-                    erro: "Erro ao buscar produto"
-                });
+                return res.status(500).json({ erro: "Erro ao buscar produto" });
             }
 
             if (results.length === 0) {
-                return res.status(404).json({
-                    erro: "Produto não encontrado"
-                });
+                return res.status(404).json({ erro: "Produto não encontrado" });
             }
 
-            let estoqueAtual = results[0].quantidade;
-            let novoEstoque;
+            const produto = results[0];
+
+            let novaQuantidade;
 
             if (tipo === "entrada") {
-                novoEstoque = estoqueAtual + Number(quantidade);
+                novaQuantidade = produto.quantidade + qtd;
             } else {
-                novoEstoque = estoqueAtual - Number(quantidade);
-
-                if (novoEstoque < 0) {
+                if (produto.quantidade < qtd) {
                     return res.status(400).json({
                         erro: "Estoque insuficiente"
                     });
                 }
+
+                novaQuantidade = produto.quantidade - qtd;
             }
 
             db.query(
                 "UPDATE produtos SET quantidade = ? WHERE id = ?",
-                [novoEstoque, id],
+                [novaQuantidade, id],
                 (err) => {
 
                     if (err) {
@@ -159,10 +222,34 @@ app.put("/produtos/:id/movimentar", (req, res) => {
                         });
                     }
 
-                    res.json({
-                        mensagem: "Movimentação realizada",
-                        quantidade: novoEstoque
-                    });
+                    console.log("Inserindo movimentação...");
+                    console.log(id, tipo, qtd, motivo);
+
+                    db.query(
+                        `INSERT INTO movimentacoes
+                        (produto_id, tipo, quantidade, motivo)
+                        VALUES (?, ?, ?, ?)`,
+                        [id, tipo, qtd, motivo],
+                        (err, result) => {
+
+                            if (err) {
+                                console.error("ERRO INSERT:");
+                                console.error(err);
+                                return res.status(500).json({
+                                    erro: "Erro ao registrar movimentação"
+                                });
+                            }
+
+                            console.log("Movimentação salva!");
+                            console.log(result);
+
+                            res.json({
+                                mensagem: "Movimentação registrada",
+                                quantidade: novaQuantidade
+                            });
+
+                        }
+                    );
 
                 }
             );
@@ -172,118 +259,39 @@ app.put("/produtos/:id/movimentar", (req, res) => {
 
 });
 
-app.put("/produtos/:id", (req, res) => {
 
-    const { id } = req.params;
-
-    const {
-        sku,
-        nome,
-        categoria,
-        preco,
-        quantidade,
-        quantidade_minima,
-        descricao
-    } = req.body;
-
+app.get("/movimentacoes", (req, res) => {
     const sql = `
-        UPDATE produtos
-        SET
-            sku = ?,
-            nome = ?,
-            categoria = ?,
-            preco = ?,
-            quantidade = ?,
-            quantidade_minima = ?,
-            descricao = ?
-        WHERE id = ?
+        SELECT
+            m.id,
+            m.produto_id,
+            p.nome,
+            p.sku,
+            m.tipo,
+            m.quantidade,
+            m.motivo,
+            m.data_movimentacao
+        FROM movimentacoes m
+        INNER JOIN produtos p
+            ON p.id = m.produto_id
+        ORDER BY m.data_movimentacao DESC
     `;
 
-    db.query(
-        sql,
-        [
-            sku,
-            nome,
-            categoria,
-            preco,
-            quantidade,
-            quantidade_minima,
-            descricao,
-            id
-        ],
-        (err, result) => {
+    db.query(sql, (err, results) => {
 
-            if (err) {
-                console.error(err);
-                return res.status(500).json({
-                    erro: "Erro ao atualizar produto"
-                });
-            }
-
-            res.json({
-                mensagem: "Produto atualizado com sucesso"
+        if (err) {
+            console.error(err);
+            return res.status(500).json({
+                erro: "Erro ao buscar movimentações"
             });
-
         }
-    );
+
+        res.json(results);
+
+    });
+
 });
 
-app.put("/produtos/:id", (req, res) => {
-
-    const { id } = req.params;
-
-    const {
-        sku,
-        nome,
-        categoria,
-        preco,
-        quantidade,
-        quantidade_minima,
-        descricao
-    } = req.body;
-
-    const sql = `
-        UPDATE produtos
-        SET
-            sku = ?,
-            nome = ?,
-            categoria = ?,
-            preco = ?,
-            quantidade = ?,
-            quantidade_minima = ?,
-            descricao = ?
-        WHERE id = ?
-    `;
-
-    db.query(
-        sql,
-        [
-            sku,
-            nome,
-            categoria,
-            preco,
-            quantidade,
-            quantidade_minima,
-            descricao,
-            id
-        ],
-        (err, result) => {
-
-            if (err) {
-                console.error(err);
-                return res.status(500).json({
-                    erro: "Erro ao atualizar produto"
-                });
-            }
-
-            res.json({
-                mensagem: "Produto atualizado com sucesso"
-            });
-
-        }
-    );
-});
-
-app.listen(3000, () => {
+app.listen(3000, "127.0.0.1", () => {
     console.log("Servidor rodando na porta 3000");
 });
