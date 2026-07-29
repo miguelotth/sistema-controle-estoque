@@ -7,7 +7,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* --- VARIÁVEIS DO SISTEMA DE DESIGN --- */
+/*VARIÁVEIS DO SISTEMA DE DESIGN*/
 :root {
   /* Tipografia */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -39,7 +39,7 @@
   --color-warning-bg: #fff8c5;
 }
 
-/* --- RESET & CONFIGURAÇÕES GERAIS --- */
+/*RESET & CONFIGURAÇÕES GERAIS*/
 * {
   box-sizing: border-box;
   margin: 0;
@@ -61,7 +61,7 @@ button, input, select, textarea {
   color: inherit;
 }
 
-/* --- ESTRUTURA DO LAYOUT --- */
+/*ESTRUTURA DO LAYOUT*/
 .app-container {
   display: flex;
   flex-direction: column;
@@ -143,7 +143,7 @@ button, input, select, textarea {
   color: var(--text-secondary);
 }
 
-/* Conteúdo Principal */
+
 .app-content {
   flex: 1;
   padding: 24px;
@@ -155,7 +155,7 @@ button, input, select, textarea {
   gap: 20px;
 }
 
-/* --- INDICADORES (KPIs) - ESTILO LIMPO --- */
+
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -193,7 +193,7 @@ button, input, select, textarea {
   margin-top: 2px;
 }
 
-/* Cores discretas para KPIs específicos */
+
 .kpi-card.warning {
   border-left: 4px solid var(--color-warning);
 }
@@ -201,7 +201,7 @@ button, input, select, textarea {
   color: var(--color-warning);
 }
 
-/* --- PAINEL PRINCIPAL (GRID ERP) --- */
+
 .panel {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -211,7 +211,7 @@ button, input, select, textarea {
   overflow: hidden;
 }
 
-/* Barra de Ferramentas / Filtros */
+
 .toolbar {
   padding: 16px 20px;
   border-bottom: 1px solid var(--border-color);
@@ -229,7 +229,7 @@ button, input, select, textarea {
   gap: 12px;
 }
 
-/* Inputs e Seletores do Painel */
+
 .search-input-wrapper {
   position: relative;
 }
@@ -287,7 +287,7 @@ button, input, select, textarea {
   cursor: pointer;
 }
 
-/* Botões */
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -340,7 +340,7 @@ button, input, select, textarea {
   border-radius: var(--border-radius-sm);
 }
 
-/* --- TABELAS GRANDES E DENSAS (ERP) --- */
+/*TABELAS GRANDES E DENSAS (ERP)*/
 .table-container {
   overflow-x: auto;
   max-height: 550px; /* Rolagem vertical para tabelas muito grandes */
@@ -442,7 +442,7 @@ button, input, select, textarea {
   font-size: 14px;
 }
 
-/* --- MODAIS DE BANCO --- */
+/*MODAIS DE BANCO*/
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -526,7 +526,7 @@ button, input, select, textarea {
   border-bottom-right-radius: var(--border-radius-lg);
 }
 
-/* --- FORMULÁRIOS INTERNOS --- */
+/*FORMULÁRIOS INTERNOS*/
 .form-group {
   display: flex;
   flex-direction: column;
@@ -565,7 +565,7 @@ textarea.form-control {
   resize: none;
 }
 
-/* --- PÁGINAS ALTERNATIVAS (HISTÓRICO) --- */
+/*PÁGINAS ALTERNATIVAS (HISTÓRICO)*/
 .tabs-container {
   display: flex;
   border-bottom: 1px solid var(--border-color);
@@ -613,7 +613,7 @@ textarea.form-control {
   margin-top: auto;
 }
 
-/* --- TOAST NOTIFICATIONS (MENSAGENS) --- */
+/*TOAST NOTIFICATIONS (MENSAGENS)*/
 .toast-container {
   position: fixed;
   bottom: 24px;

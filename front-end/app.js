@@ -1,14 +1,4 @@
-/**
- * app.js - Controlador principal do Frontend do Controle de Estoque
- * 
- * Conecta os elementos da interface (DOM) com a camada de serviço (api.js).
- * Implementa renderização de tabelas, filtros rápidos, preenchimento de KPIs,
- * gerenciamento de modais e exibição de alertas de feedback (toasts).
- */
 
-// A variável 'api' é carregada no escopo global a partir de api.js no index.html
-
-// --- ELEMENTOS DO DOM ---
 const elements = {
   // Abas
   tabEstoqueBtn: document.getElementById('tab-estoque-btn'),
@@ -75,7 +65,7 @@ const elements = {
   currentDate: document.getElementById('current-date')
 };
 
-// --- ESTADO LOCAL DO FRONTEND ---
+//ESTADO LOCAL DO FRONTEND
 let state = {
   products: [],
   movements: [],
@@ -83,7 +73,7 @@ let state = {
   activeTab: 'estoque' // 'estoque' ou 'movimentacoes'
 };
 
-// --- FORMATADORES AUXILIARES ---
+//FORMATADORES AUXILIARES
 const formatCurrency = (val) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
 };
@@ -99,7 +89,7 @@ const formatDate = (dateString) => {
   }).format(date);
 };
 
-// --- TOAST NOTIFICATIONS (Alertas rápidos estilo banco) ---
+//TOAST NOTIFICATIONS
 const showToast = (message, type = 'success') => {
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
@@ -118,7 +108,7 @@ const showToast = (message, type = 'success') => {
   }, 4000);
 };
 
-// --- CARREGAR DADOS---
+//CARREGAR DADOS
 const loadData = async () => {
   try {
     state.products = await api.getProducts();
@@ -134,7 +124,7 @@ const loadData = async () => {
   }
 };
 
-// --- CONTROLE DE EXIBIÇÃO DE ABA ---
+//CONTROLE DE EXIBIÇÃO DE ABA
 const switchTab = (tab) => {
   state.activeTab = tab;
   if (tab === 'estoque') {
@@ -152,7 +142,7 @@ const switchTab = (tab) => {
   }
 };
 
-// --- ATUALIZAR CATEGORIAS NO FILTRO SELECT ---
+//ATUALIZAR CATEGORIAS NO FILTRO SELECT
 const updateCategoryFilterDropdown = () => {
   const currentValue = elements.categoryFilter.value;
   
@@ -175,7 +165,7 @@ const updateCategoryFilterDropdown = () => {
   }
 };
 
-// --- ATUALIZAR ACÚMULO DE DADOS NO PAINEL DE METAS (KPIs) ---
+//ATUALIZAR ACÚMULO DE DADOS NO PAINEL DE METAS (KPIs)
 const renderDashboard = () => {
   const totalSkus = state.products.length;
   
@@ -197,7 +187,7 @@ const renderDashboard = () => {
   elements.kpiTotalValue.textContent = formatCurrency(totalValue);
   elements.kpiLowStockCount.textContent = lowStockCount;
 
-  // Destacar levemente se houver alerta de estoque baixo
+  //Destacar levemente se houver alerta de estoque baixo
   if (lowStockCount > 0) {
     elements.kpiCardLowStock.style.borderColor = 'var(--color-warning)';
     elements.kpiCardLowStock.style.backgroundColor = 'var(--color-warning-bg)';
@@ -207,13 +197,13 @@ const renderDashboard = () => {
   }
 };
 
-// --- LISTAGEM DE PRODUTOS ---
+//LISTAGEM DE PRODUTOS
 const renderProductsTable = () => {
   const searchTerm = elements.searchFilter.value.toLowerCase().trim();
   const categoryFilterVal = elements.categoryFilter.value;
   const lowStockFilterChecked = elements.lowStockFilter.checked;
 
-  // Filtra dados com base nos filtros ativos
+  //Filtra dados com base nos filtros ativos
   const filteredProducts = state.products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchTerm) || p.sku.toLowerCase().includes(searchTerm);
     const matchesCategory = !categoryFilterVal || p.category === categoryFilterVal;
@@ -266,7 +256,7 @@ const renderProductsTable = () => {
   });
 };
 
-// --- LISTAGEM DE HISTÓRICO ---
+//LISTAGEM DE HISTÓRICO
 const renderMovementsTable = () => {
   elements.movementsTableBody.innerHTML = '';
   
@@ -303,7 +293,7 @@ const renderMovementsTable = () => {
   });
 };
 
-// --- GERENCIAMENTO DE OPERAÇÕES CRUD / INTERAÇÕES DA TABELA ---
+//GERENCIAMENTO DE OPERAÇÕES CRUD / INTERAÇÕES DA TABELA
 const handleTableActions = (e) => {
   const button = e.target.closest('button');
   if (!button) return;
@@ -319,14 +309,14 @@ console.log("Botão clicado:", action, id);
   if (!product) return;
 
   if (action === 'move') {
-    // Abrir Modal de Movimentação Rápida
+    //Abrir Modal de Movimentação Rápida
     elements.movementProductId.value = product.id;
     elements.movementProductName.value = product.name;
     elements.movementQty.value = '';
     elements.movementReason.value = '';
     elements.modalMovementBackdrop.classList.add('active');
   } else if (action === 'edit') {
-    // Abrir Modal de Edição de Produto
+    //Abrir Modal de Edição de Produto
     elements.productModalTitle.textContent = 'Editar Dados do Produto';
     elements.productId.value = product.id;
     elements.productSku.value = product.sku;
@@ -336,20 +326,20 @@ console.log("Botão clicado:", action, id);
     elements.productMinQuantity.value = product.minQuantity;
     elements.productDescription.value = product.description;
     
-    // Esconde a quantidade inicial na edição (para evitar distorções de estoque sem justificativa)
+    //Esconde a quantidade inicial na edição (para evitar distorções de estoque sem justificativa)
     elements.initialQtyContainer.style.display = 'none';
     elements.productQuantity.removeAttribute('required');
 
     elements.modalProductBackdrop.classList.add('active');
   } else if (action === 'delete') {
-    // Abrir Confirmação de Exclusão
+    //Abrir Confirmação de Exclusão
     state.productIdToDelete = product.id;
     elements.deleteProductDisplayName.textContent = `${product.name} (${product.sku})`;
     elements.modalDeleteBackdrop.classList.add('active');
   }
 };
 
-// --- SUBMIT: FORMULÁRIO DE PRODUTO (Criar / Editar) ---
+//SUBMIT: FORMULÁRIO DE PRODUTO (Criar / Editar)
 const handleProductSubmit = async (e) => {
   e.preventDefault();
   
@@ -372,11 +362,11 @@ const handleProductSubmit = async (e) => {
     btnSave.textContent = 'Gravando...';
 
     if (id) {
-      // Modo Edição
+      //Modo Edição
       await api.updateProduct(id, productData);
       showToast('Produto atualizado com sucesso no estoque!');
     } else {
-      // Modo Cadastro
+      //Modo Cadastro
       await api.createProduct(productData);
       showToast('Produto cadastrado com sucesso!');
     }
@@ -391,7 +381,7 @@ const handleProductSubmit = async (e) => {
   }
 };
 
-// --- SUBMIT: FORMULÁRIO DE MOVIMENTAÇÃO (Entrada/Saída) ---
+//SUBMIT: FORMULÁRIO DE MOVIMENTAÇÃO (Entrada/Saída)
 const handleMovementSubmit = async (e) => {
   e.preventDefault();
 
@@ -428,7 +418,7 @@ const handleMovementSubmit = async (e) => {
   }
 };
 
-// --- SUBMIT: CONFIRMAÇÃO DE EXCLUSÃO ---
+//SUBMIT: CONFIRMAÇÃO DE EXCLUSÃO
 const handleConfirmDelete = async () => {
   if (!state.productIdToDelete) return;
 
@@ -455,7 +445,7 @@ const handleConfirmDelete = async () => {
   }
 };
 
-// --- INICIALIZAÇÃO DA APLICAÇÃO ---
+//INICIALIZAÇÃO DA APLICAÇÃO
 const init = () => {
   // Ajusta data atual
   elements.currentDate.textContent = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new Date());

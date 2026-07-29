@@ -1,22 +1,6 @@
-// Helper: Obter dados locais
-function getStoredData(key, defaultVal) {
-  const data = localStorage.getItem(key);
-  if (!data) {
-    localStorage.setItem(key, JSON.stringify(defaultVal));
-    return defaultVal;
-  }
-  return JSON.parse(data);
-}
 
-// Helper: Gravar dados locais
-function setStoredData(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
-}
-
-// API de Produtos (exposta globalmente para evitar bloqueio de CORS ao abrir como arquivo local)
 window.api = {
 
-  // Obter todos os produtos
   async getProducts() {
 
     const response = await fetch(
@@ -42,14 +26,7 @@ window.api = {
 
   },
 
-  // Obter produto por ID (LEGADO: ainda usa LocalStorage, ver OBS no topo do arquivo)
-  async getProductById(id) {
-    await delay();
-    const products = getStoredData(STORAGE_PRODUCTS_KEY, DEFAULT_PRODUCTS);
-    return products.find(p => p.id === id) || null;
-  },
 
-  // Criar novo produto
   async createProduct(productData) {
 
     const response = await fetch(
@@ -80,7 +57,8 @@ window.api = {
     return data;
   },
 
-  // Atualizar produto existente
+  
+
   async updateProduct(id, updatedData) {
 
     const response = await fetch(
@@ -111,7 +89,7 @@ window.api = {
     return data;
   },
 
-  // Deletar produto
+
   async deleteProduct(id) {
 
     const response = await fetch(
@@ -130,7 +108,7 @@ window.api = {
     return true;
   },
 
-  // Registrar Entrada ou Saída de Estoque avulsa
+
   async adjustStock(id, type, qty, reason) {
 
     const response = await fetch(
@@ -157,29 +135,7 @@ window.api = {
     return data;
   },
 
-  // Registrar Movimentação no Histórico (LEGADO: ver OBS no topo do arquivo.
-  // O backend já registra a movimentação dentro de adjustStock, então esta
-  // função não deve ser chamada em conjunto com adjustStock para evitar duplicidade)
-  async registerMovement({ productId, productName, sku, type, quantity, reason }) {
-    const movements = getStoredData(STORAGE_MOVEMENTS_KEY, DEFAULT_MOVEMENTS);
 
-    const newMovement = {
-      id: Date.now().toString() + Math.random().toString().slice(-4),
-      productId,
-      productName,
-      sku,
-      type,
-      quantity: parseInt(quantity),
-      date: new Date().toISOString(),
-      reason: reason || ''
-    };
-
-    movements.unshift(newMovement); // Adiciona no início (mais recente primeiro)
-    setStoredData(STORAGE_MOVEMENTS_KEY, movements);
-    return newMovement;
-  },
-
-  // Obter Histórico de Movimentações
   async getMovements() {
 
     const response = await fetch(
