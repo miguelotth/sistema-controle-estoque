@@ -159,8 +159,3 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 Maintainer: Miguel Otth — https://github.com/miguelotth
 
-If you'd like, I can:
-- Create a PR with this README.
-- Add .env.example, a basic Dockerfile/docker-compose, and DB migration/seed scripts.
-- Add a screenshots folder and update README with images.
-- Generate example Postman collection or tests.
