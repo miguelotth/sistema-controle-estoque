@@ -122,7 +122,7 @@ exports.movimentarProduto = (id, tipo, quantidade, motivo, callback) => {
                         (produto_id, tipo, quantidade, motivo)
                         VALUES (?, ?, ?, ?)`,
                         [id, tipo, qtd, motivo],
-                        (err, result) => {
+                        (err) => {
 
                             if (err) {
                                 return callback(err);
@@ -144,27 +144,6 @@ exports.movimentarProduto = (id, tipo, quantidade, motivo, callback) => {
 
 };
 
-exports.excluirProduto = (id, callback) => {
-
-    db.query(
-        "DELETE FROM movimentacoes WHERE produto_id = ?",
-        [id],
-        (err) => {
-
-            if (err) {
-                return callback(err);
-            }
-
-            db.query(
-                "DELETE FROM produtos WHERE id = ?",
-                [id],
-                callback
-            );
-
-        }
-    );
-
-};
 
 exports.excluirProduto = (id, callback) => {
 
