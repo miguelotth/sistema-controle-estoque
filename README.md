@@ -1,161 +1,328 @@
-# Inventory Control System / Sistema de Controle de Estoque
+<div align="center">
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Node.js CI](https://img.shields.io/badge/node-%3E%3D14-brightgreen)](https://nodejs.org/)
-[![MySQL](https://img.shields.io/badge/MySQL-%3E%3D5.7-blue)](https://www.mysql.com/)
+# 📦 Sistema de Controle de Estoque
 
-Lightweight Inventory Control System built to practice Full Stack development with JavaScript, Node.js, Express and MySQL.
+### Sistema web para gerenciamento de produtos, movimentações e controle de estoque em tempo real.
 
-Versão em Português abaixo.
+<p align="center">
 
----
+![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-4.x-000000?style=for-the-badge&logo=express&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 
-## Table of contents
+</p>
 
-- [Features / Funcionalidades](#features--funcionalidades)
-- [Tech / Tecnologias](#tech--tecnologias)
-- [Demo / Capturas de tela](#demo--capturas-de-tela)
-- [Prerequisites / Pré-requisitos](#prerequisites--pré-requisitos)
-- [Installation / Instalação](#installation--instalação)
-- [Environment / Variáveis de ambiente](#environment--variáveis-de-ambiente)
-- [Database / Banco de dados](#database--banco-de-dados)
-- [Run / Executar](#run--executar)
-- [API Endpoints / Endpoints da API](#api-endpoints--endpoints-da-api)
-- [Contributing / Contribuindo](#contributing--contribuindo)
-- [Future improvements / Melhorias futuras](#future-improvements--melhorias-futuras)
-- [License / Licença](#license--licença)
-- [Contact / Contato](#contact--contato)
+<p align="center">
+
+<img src="./assets/demo.gif" width="900">
+
+</p>
+
+</div>
 
 ---
 
-## Features / Funcionalidades
+# 📖 Sobre o projeto
 
-- Product registration / Cadastro de produtos
-- Product listing / Listagem de produtos
-- MySQL integration / Integração com banco de dados MySQL
-- REST API with Express / API REST com Express
-- Responsive interface / Interface responsiva
+O **Sistema de Controle de Estoque (SGE)** é uma aplicação Full Stack desenvolvida com foco em boas práticas de arquitetura e organização de código.
 
-## Tech / Tecnologias
+O sistema permite gerenciar produtos, controlar entradas e saídas de estoque e registrar todo o histórico de movimentações, proporcionando uma visão completa do inventário em tempo real.
 
-- HTML, CSS, JavaScript
-- Node.js, Express
+O projeto foi desenvolvido utilizando arquitetura **MVC (Model-View-Controller)** no backend e comunicação via API REST entre frontend e servidor.
+
+---
+
+# ✨ Funcionalidades
+
+## 📦 Produtos
+
+- Cadastro de produtos
+- Edição de produtos
+- Exclusão de produtos
+- Cadastro de SKU
+- Descrição do produto
+- Categoria
+- Preço
+- Quantidade atual
+- Quantidade mínima
+
+---
+
+## 📊 Dashboard
+
+- Total de produtos cadastrados
+- Total de itens em estoque
+- Valor total do patrimônio
+- Produtos abaixo do estoque mínimo
+
+---
+
+## 📈 Controle de Estoque
+
+- Entrada de estoque
+- Saída de estoque
+- Validação de estoque insuficiente
+- Atualização automática das quantidades
+
+---
+
+## 📝 Histórico
+
+Cada movimentação registra:
+
+- Produto
+- SKU
+- Tipo (Entrada/Saída)
+- Quantidade
+- Motivo
+- Data
+- Hora
+
+---
+
+# 🏗️ Arquitetura
+
+O backend segue o padrão **MVC**, separando responsabilidades entre rotas, controladores e acesso ao banco.
+
+```
+Cliente
+    │
+    ▼
+Routes
+    │
+    ▼
+Controllers
+    │
+    ▼
+Models
+    │
+    ▼
+MySQL
+```
+
+---
+
+# 📂 Estrutura do Projeto
+
+```
+controle-estoque/
+
+│
+├── backend/
+│   │
+│   ├── controllers/
+│   │      movimentacoesController.js
+│   │      produtosController.js
+│   │
+│   ├── middlewares/
+│   │      validarProduto.js
+│   │
+│   ├── models/
+│   │      movimentacaoModel.js
+│   │      produtoModel.js
+│   │
+│   ├── routes/
+│   │      movimentacoes.js
+│   │      produtos.js
+│   │
+│   ├── db.js
+│   └── server.js
+│
+├── frontend/
+│   │
+│   ├── index.html
+│   ├── style.css
+│   ├── app.js
+│   └── api.js
+│
+└── README.md
+```
+
+---
+
+# 🗄️ Banco de Dados
+
+## Tabela Produtos
+
+| Campo | Tipo |
+|--------|------|
+| id | INT |
+| sku | VARCHAR |
+| nome | VARCHAR |
+| categoria | VARCHAR |
+| preco | DECIMAL |
+| quantidade | INT |
+| quantidade_minima | INT |
+| descricao | TEXT |
+
+---
+
+## Tabela Movimentações
+
+| Campo | Tipo |
+|--------|------|
+| id | INT |
+| produto_id | INT |
+| tipo | ENUM |
+| quantidade | INT |
+| motivo | VARCHAR |
+| data_movimentacao | DATETIME |
+
+---
+
+# 🚀 Tecnologias
+
+## Front-end
+
+- HTML5
+- CSS3
+- JavaScript
+
+## Back-end
+
+- Node.js
+- Express
+
+## Banco de Dados
+
 - MySQL
-- Git & GitHub
 
-## Demo / Capturas de tela
+## Ferramentas
 
-(Add screenshots or a short GIF here. Example:)
-![Screenshot](./docs/screenshot.png)
+- Git
+- GitHub
+- VS Code
 
-## Prerequisites / Pré-requisitos
+---
 
-- Node.js >= 14
-- npm or yarn
-- MySQL server
+# ▶️ Como executar
 
-## Installation / Instalação
-
-1. Clone the repo
-   - git clone https://github.com/miguelotth/sistema-controle-estoque.git
-   - cd sistema-controle-estoque
-
-2. Install dependencies
-   - npm install
-   - or
-   - yarn install
-
-## Environment / Variáveis de ambiente
-
-Create a `.env` file in the project root (do not commit it). Example variables:
-
-```
-PORT=3000
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=inventory_db
-DB_PORT=3306
-```
-
-Consider adding `.env.example` to the repo with the keys (not real secrets).
-
-## Database / Banco de dados
-
-1. Create the database:
-
-```sql
-CREATE DATABASE IF NOT EXISTS inventory_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE inventory_db;
-```
-
-2. Create a simple products table (example):
-
-```sql
-CREATE TABLE products (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  description TEXT,
-  price DECIMAL(10,2) DEFAULT 0,
-  quantity INT DEFAULT 0,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-3. Update `.env` with DB credentials and run the app (it should connect and use that table). Add migration scripts or a seed script for repeatable setups.
-
-## Run / Executar
-
-- Start in development:
-  - npm run dev
-- Start production:
-  - npm start
-
-(Adjust scripts in package.json if needed: `dev` -> nodemon, `start` -> node index.js/app.js)
-
-## API Endpoints / Endpoints da API
-
-Example endpoints (update to reflect your actual routes):
-
-- GET /api/products — List products
-- GET /api/products/:id — Get product by id
-- POST /api/products — Create new product
-  - Body: { "name": "Product", "description": "...", "price": 10.5, "quantity": 5 }
-- PUT /api/products/:id — Update product
-- DELETE /api/products/:id — Delete product
-
-Example curl:
+## Clone o projeto
 
 ```bash
-curl -X POST http://localhost:3000/api/products \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Pen","description":"Ballpoint","price":1.25,"quantity":100}'
+git clone https://github.com/miguelotth/sistema-controle-estoque.git
 ```
 
-## Contributing / Contribuindo
+---
 
-- Fork the repo
-- Create a feature branch: git checkout -b feature/your-feature
-- Commit your changes and open a PR
-- Add tests or instructions for manual QA
-- Keep changes small and focused
+## Entre na pasta
 
-If you'd like, open issues for planned features (editing, deletion, movement history). Label them as `enhancement`.
+```bash
+cd sistema-controle-estoque
+```
 
-## Future improvements / Melhorias futuras
+---
 
-- Product editing / Edição de produtos
-- Product deletion / Exclusão de produtos
-- Stock movement history / Histórico de movimentações de estoque
-- Dashboard with indicators / Dashboard com indicadores
-- User authentication / Autenticação de usuários
-- Add Docker setup, migrations, and tests
+## Instale as dependências
 
-## License / Licença
+```bash
+npm install
+```
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+---
 
-## Contact / Contato
+## Configure o banco MySQL
 
-Maintainer: Miguel Otth — https://github.com/miguelotth
+Crie um banco de dados e ajuste as credenciais do arquivo:
 
+```
+backend/db.js
+```
+
+---
+
+## Inicie o servidor
+
+```bash
+node server.js
+```
+
+ou
+
+```bash
+npm start
+```
+
+---
+
+## Abra o Front-end
+
+Basta abrir o arquivo:
+
+```
+index.html
+```
+
+ou utilizar uma extensão como **Live Server**.
+
+---
+
+# 📸 Demonstração
+
+## Dashboard
+
+<img src="./assets/dashboard.png">
+
+---
+
+## Cadastro
+
+<img src="./assets/cadastro.png">
+
+---
+
+## Movimentação
+
+<img src="./assets/movimentacao.png">
+
+---
+
+## Histórico
+
+<img src="./assets/historico.png">
+
+---
+
+# 📌 Próximas melhorias
+
+- Login de usuários
+- JWT
+- Docker
+- Swagger
+- Exportação em Excel
+- Relatórios em PDF
+- Dashboard com gráficos
+- Controle de usuários e permissões
+- Paginação
+- Pesquisa avançada
+- Logs de auditoria
+
+---
+
+# 🎯 Objetivos do projeto
+
+- Aplicar arquitetura MVC
+- Praticar integração Front-end e Back-end
+- Desenvolver uma API REST
+- Trabalhar com MySQL
+- Utilizar boas práticas de organização de código
+- Criar um projeto para portfólio
+
+---
+
+# 👨‍💻 Autor
+
+**Miguel Othon**
+
+[![GitHub](https://img.shields.io/badge/GitHub-miguelotth-181717?style=for-the-badge&logo=github)](https://github.com/miguelotth)
+
+---
+
+<div align="center">
+
+### ⭐ Se este projeto foi útil, considere deixar uma estrela no repositório!
+
+</div>
