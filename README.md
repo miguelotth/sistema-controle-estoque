@@ -16,7 +16,7 @@
 
 ## ◈ Demonstração
 
-![Demonstração do sistema](screenshots/demo.gif)
+![Demonstração do sistema](docs/demo.gif)
 
 Demonstração do fluxo principal do sistema, incluindo cadastro de produtos, controle de estoque, movimentações e consulta do histórico.
 
@@ -88,25 +88,25 @@ A interface foi desenvolvida com foco em organização, simplicidade e visualiza
 
 ### Painel de Estoque
 
-![Painel de Estoque](screenshots/dashboard.png)
+![Painel de Estoque](docs/dashboard.png)
 
 O painel principal apresenta os indicadores gerais do estoque e a tabela com os produtos cadastrados.
 
 ### Cadastro de Produto
 
-![Cadastro de Produto](screenshots/cadastro-produto.png)
+![Cadastro de Produto](docs/cadastro-produto.png)
 
 O formulário permite cadastrar informações como SKU, nome, categoria, preço, quantidade inicial, estoque mínimo e descrição.
 
 ### Movimentação de Estoque
 
-![Movimentação de Estoque](screenshots/movimentacao.png)
+![Movimentação de Estoque](docs/movimentacao.png)
 
 A movimentação permite registrar entradas e saídas de produtos, informando a quantidade e o motivo da operação.
 
 ### Histórico de Movimentações
 
-![Histórico de Movimentações](screenshots/historico.png)
+![Histórico de Movimentações](docs/historico.png)
 
 O histórico apresenta as movimentações realizadas, incluindo data, produto, SKU, tipo de operação, quantidade e motivo.
 
