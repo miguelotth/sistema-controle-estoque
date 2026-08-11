@@ -305,7 +305,7 @@ const db = mysql.createConnection({
 module.exports = db;
 ```
 
-Não publique senhas ou credenciais reais no GitHub.
+> **Importante:** não publique senhas ou credenciais reais no GitHub.
 
 ### 5. Inicie o servidor
 
@@ -370,7 +370,7 @@ ON DELETE CASCADE
            ▼
 ┌──────────────────────┐
 │ Entrada / Saída      │
-│ de estoque           │
+│ de estoque            │
 └──────────┬───────────┘
            │
            ├──────────────► Atualiza quantidade
@@ -448,9 +448,8 @@ Desenvolvedor em formação com interesse em desenvolvimento Full Stack, infraes
 
 ### Links
 
-[GitHub](https://github.com/miguelotth)
-
-[Repositório do projeto](https://github.com/miguelotth/sistema-controle-estoque)
+* [GitHub](https://github.com/miguelotth)
+* [Repositório do projeto](https://github.com/miguelotth/sistema-controle-estoque)
 
 ---
 
